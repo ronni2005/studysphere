@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Notes | StudySphere</title>
+  <link rel="stylesheet" href="notes.css">
+</head>
+<body>
+  <header class="notes-header">
+    <h1>🗒 Quick Notes</h1>
+    <a href="dashboard.html" class="back-button">← Back to Dashboard</a>
+  </header>
+
+  <div class="notes-container">
+    <aside class="sidebar">
+      <h2>📚 My Notes</h2>
+      <ul id="noteList"></ul>
+    </aside>
+
+    <main class="main-notes">
+      <div class="note-input">
+        <input type="text" id="noteTitle" placeholder="Note Title" />
+        <textarea id="noteText" placeholder="Type your note here..."></textarea>
+        <button id="addNoteBtn">Add Note</button>
+      </div>
+      <div id="notesArea" class="notes-area"></div>
+    </main>
+  </div>
+
+  <script src="notes.js"></script>
+</body>
+</html>

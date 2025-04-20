@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+body {
+  background-image: url("index.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: 'Poppins', sans-serif;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.4), rgba(10, 10, 10, 0.7));
+  z-index: 0;
+}
+
+
+.main-heading {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  color: #d30b58;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+  line-height: 1.1;
+  position: relative;
+  z-index: 1;
+  animation: fadeInDown 1s ease forwards;
+}
+
+p {
+  font-size: clamp(3rem, 11vw, 13rem);
+  max-width: 90%;
+  margin-bottom: 3rem;
+  color: #edeff2;
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.4);
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 1s ease 0.5s forwards;
+  opacity: 0;
+}
+
+
+.btn-blue {
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  text-decoration: none;
+  background: linear-gradient(90deg, #6a5af9, #00d4ff);
+  color: white;
+}
+
+.btn-blue:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 212, 255, 0.7);
+}
+
+.btn-green {
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  text-align: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+  transform: scale(1);
+  opacity: 0;
+  animation: fadeInUp 1s ease 1s forwards;
+  background: linear-gradient(90deg, #3ed8b7, #89f7fe);
+  color: white;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-green:hover {
+  transform: scale(1.05) translateY(-4px);
+  box-shadow: 0 10px 30px rgba(137, 247, 254, 0.7);
+}
+
+/* FLEX CONTAINER */
+.flex {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 640px) {
+  .flex {
+    flex-direction: row;
+  }
+}
+
+/* ANIMATIONS */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

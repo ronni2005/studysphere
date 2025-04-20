@@ -1,0 +1,103 @@
+
+body.dashboard-body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-image: url("https://img.freepik.com/free-vector/flat-international-day-education-background_23-2151081135.jpg?uid=R196731411&ga=GA1.1.877574578.1742841491&semt=ais_hybrid&w=740");
+  background-size: fill;
+  background-position: center;
+  backdrop-filter: blur(1.5px);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #060c12e0;
+  border-bottom: 1px solid #1f3a5f;
+}
+
+.navbar h1 {
+  font-size: 1.8rem;
+  color: #3ddad7;
+}
+
+.navbar nav a {
+  color: #d1e3f8;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.navbar nav a:hover {
+  color: #3ddad7;
+  font-size: 1.2rem;
+}
+
+
+main.tool-links {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+main.tool-links h2 {
+  font-size: 3rem;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin-bottom: 2.5rem;
+  color: #ffffff;
+}
+
+
+.grid {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  max-width: 95%;
+  margin: 0 auto;
+}
+
+
+.tool-btn {
+  flex: 1 1 180px;
+  max-width: 200px;
+  background-color: #448877e5;
+  padding: 2rem 1rem;
+  border-radius: 1rem;
+  color: hwb(46 27% 0%);
+  font-size: 1.3rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 12px rgba(61, 218, 215, 0.2);
+  border: 1px solid transparent;
+  text-align: center;
+
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.tool-btn:nth-child(1) { animation-delay: 0s; }
+.tool-btn:nth-child(2) { animation-delay: 0.1s; }
+.tool-btn:nth-child(3) { animation-delay: 0.2s; }
+.tool-btn:nth-child(4) { animation-delay: 0.3s; }
+.tool-btn:nth-child(5) { animation-delay: 0.4s; }
+
+.tool-btn:hover {
+  background-color: #1d4b72;
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 0 20px rgba(61, 218, 215, 0.4);
+  border: 1px solid #3ddad7;
+}
+
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

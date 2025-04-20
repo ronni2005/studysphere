@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calendar | StudySphere</title>
+  <link rel="stylesheet" href="calendar.css" />
+</head>
+<body>
+  <nav class="top-bar">
+    <a href="dashboard.html" class="back-btn"><b>← Back to Dashboard</b></a>
+    <div class="current-month-year" id="monthYear"></div>
+    <div class="navigation">
+      <button onclick="prevMonth()">‹</button>
+      <button onclick="nextMonth()">›</button>
+    </div>
+  </nav>
+
+  <main class="calendar-container">
+    <div class="calendar" id="calendar"></div>
+  </main>
+
+  <script src="calendar.js"></script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pomodoro Timer | StudySphere</title>
+  <style>
+    body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-image: url("https://img.freepik.com/free-photo/clock-face-glowing-midnight-time-up-generative-ai_188544-9607.jpg?t=st=1745069821~exp=1745073421~hmac=46aa34356838d34ca7549546bcb272a82fa0ae8bec00898e96dde95b61ef846c&w=1800");
+  background-size: cover;
+  background-position: center;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  backdrop-filter: blur(4px);
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: rgba(15, 23, 42, 0.8);
+  font-size: 1.1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.clock {
+  font-weight: bold;
+}
+
+.back-btn {
+  color: #b94de3;
+  text-decoration: none;
+}
+
+.pomodoro-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background-color: rgba(30, 41, 59, 0.5);
+  margin: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #fefefe;
+  text-shadow: 1px 1px 4px #000;
+}
+
+.timer-display {
+  font-size: 5rem;
+  font-weight: bold;
+  color: #6bd1b9;
+}
+
+.progress-container {
+  width: 60%;
+  height: 18px;
+  background: #2f2a34;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #cb780c;
+  transition: width 1s linear;
+}
+
+.controls button,
+#musicButton,
+#stopMusicButton {
+  padding: 10px 20px;
+  font-size: 1rem;
+  margin: 0 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #0b5558;
+  color: #f0f9ff;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease;
+}
+
+.controls button:hover,
+#musicButton:hover {
+  background-color: #7247bd;
+}
+
+#stopMusicButton {
+  background-color:#7247bd;
+}
+
+#stopMusicButton:hover {
+  background-color: #7247bd;
+}
+
+.customize label {
+  margin: 10px;
+  font-weight: 500;
+  color: #fefefe;
+}
+
+.customize input {
+  width: 60px;
+  padding: 5px;
+  margin-left: 10px;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border: none;
+  border-radius: 4px;
+}
+
+#breakTimer {
+  font-size: 2rem;
+  color:#e90e8a;
+  margin-top: 20px;
+}
+
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="clock" id="liveClock">00:00:00</div>
+    <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+  </header>
+
+  <main class="pomodoro-container">
+    <h1>Pomodoro Timer</h1>
+    <div class="timer-display" id="timerDisplay">25:00</div>
+
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="controls">
+      <button onclick="startTimer()">Start</button>
+      <button onclick="pauseTimer()">Pause</button>
+      <button onclick="resetTimer()">Reset</button>
+    </div>
+
+    <div class="customize">
+      <label>Session (min): <input type="number" id="sessionLength" value="25" min="1" /></label>
+      <label>Break (min): <input type="number" id="breakLength" value="5" min="1" /></label>
+    </div>
+
+    <div id="breakTimer"></div>
+
+    <button id="musicButton" onclick="toggleMusic()">Play Break Music</button>
+    <button id="stopMusicButton" onclick="stopMusic()">Stop Music</button>
+  </main>
+
+  <audio id="breakMusic" loop>
+    <source src="relaxing-piano-310597.mp3" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <audio id="bellSound" src="bell.mp3"></audio>
+
+  <script>
+    let timer;
+    let isRunning = false;
+    let isBreak = false;
+    let totalSeconds = 0;
+    let remainingSeconds = 0;
+    let isMusicPlaying = false;
+
+    const breakMusic = document.getElementById("breakMusic");
+    const bellSound = document.getElementById("bellSound");
+
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60).toString().padStart(2, "0");
+      const sec = (seconds % 60).toString().padStart(2, "0");
+      return `${min}:${sec}`;
+    }
+
+    function updateTimerDisplay() {
+      const display = document.getElementById("timerDisplay");
+      const progress = document.getElementById("progressBar");
+      display.textContent = formatTime(remainingSeconds);
+      if (totalSeconds > 0) {
+        progress.style.width = `${((totalSeconds - remainingSeconds) / totalSeconds) * 100}%`;
+      }
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+
+      const sessionLength = parseInt(document.getElementById("sessionLength").value);
+      const breakLength = parseInt(document.getElementById("breakLength").value);
+
+      if (!remainingSeconds) {
+        totalSeconds = isBreak ? breakLength * 60 : sessionLength * 60;
+        remainingSeconds = totalSeconds;
+      }
+
+      isRunning = true;
+      updateTimerDisplay();
+
+      timer = setInterval(() => {
+        if (remainingSeconds > 0) {
+          remainingSeconds--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timer);
+          isRunning = false;
+
+          if (!isBreak) {
+            isBreak = true;
+            totalSeconds = breakLength * 60;
+            remainingSeconds = totalSeconds;
+            document.getElementById("timerDisplay").textContent = "Now enjoy your break time 😌";
+            document.getElementById("musicButton").style.display = "inline-block"; // Show music button
+            startBreakTimer();
+          } else {
+            isBreak = false;
+            breakMusic.pause();
+            breakMusic.currentTime = 0;
+            bellSound.play();
+            totalSeconds = sessionLength * 60;
+            remainingSeconds = totalSeconds;
+            updateTimerDisplay();
+            startTimer();
+          }
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timer);
+      isRunning = false;
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      isRunning = false;
+      isBreak = false;
+      const sessionLength = parseInt(document.getElementById("sessionLength").value);
+      totalSeconds = sessionLength * 60;
+      remainingSeconds = totalSeconds;
+      updateTimerDisplay();
+      document.getElementById("progressBar").style.width = "0%";
+      breakMusic.pause();
+      breakMusic.currentTime = 0;
+      document.getElementById("musicButton").style.display = "none"; // Hide music button on reset
+      document.getElementById("stopMusicButton").style.display = "none"; // Hide stop music button
+    }
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("liveClock").textContent = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function updateSessionDisplay() {
+      if (!isRunning && !isBreak) {
+        const sessionLength = parseInt(document.getElementById("sessionLength").value);
+        totalSeconds = sessionLength * 60;
+        remainingSeconds = totalSeconds;
+        updateTimerDisplay();
+      }
+    }
+
+    function updateBreakDisplay() {
+      if (!isRunning && isBreak) {
+        const breakLength = parseInt(document.getElementById("breakLength").value);
+        totalSeconds = breakLength * 60;
+        remainingSeconds = totalSeconds;
+        updateTimerDisplay();
+      }
+    }
+
+    function startBreakTimer() {
+      let breakTime = parseInt(document.getElementById("breakLength").value);
+      let breakSeconds = breakTime * 60;
+
+      const breakTimerDisplay = document.getElementById("breakTimer");
+
+      let breakCountdown = setInterval(() => {
+        if (breakSeconds > 0) {
+          breakSeconds--;
+          breakTimerDisplay.textContent = `Break Timer: ${formatTime(breakSeconds)}`;
+        } else {
+          clearInterval(breakCountdown);
+          document.getElementById("musicButton").style.display = "none"; // Hide music button after break
+          stopMusic();
+        }
+      }, 1000);
+    }
+
+    function toggleMusic() {
+      if (!isMusicPlaying) {
+        breakMusic.play();
+        isMusicPlaying = true;
+        document.getElementById("musicButton").style.display = "none"; // Hide play music button
+        document.getElementById("stopMusicButton").style.display = "inline-block"; // Show stop music button
+      }
+    }
+
+    function stopMusic() {
+      breakMusic.pause();
+      breakMusic.currentTime = 0;
+      isMusicPlaying = false;
+      document.getElementById("musicButton").style.display = "inline-block"; // Show play music button
+      document.getElementById("stopMusicButton").style.display = "none"; // Hide stop music button
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("timerDisplay").textContent = formatTime(
+        parseInt(document.getElementById("sessionLength").value) * 60
+      );
+
+      document.getElementById("sessionLength").addEventListener("input", updateSessionDisplay);
+      document.getElementById("breakLength").addEventListener("input", updateBreakDisplay);
+    });
+  </script>
+</body>
+</html>
